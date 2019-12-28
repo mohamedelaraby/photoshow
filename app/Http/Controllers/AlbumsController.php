@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Album;
 use Illuminate\Http\Request;
 
 class AlbumsController extends Controller
@@ -35,7 +36,35 @@ class AlbumsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate form
+        $this->validate($request,[
+            'name' => 'required|max:65',
+            'description' => 'required|max:120',
+            'cover_image' => 'image|max:1999'
+        ]);
+
+        // Create new album
+        $album = new Album;
+        //store in db
+        $album->name = $request->input('name');
+        $album->description = $request->input('description');
+
+        // Get the file name with extension
+        $filenameWithExt =  $request->file('cover_image')->getClientOriginalName();
+
+        // Get the file name
+        $fileName = pathinfo($filenameWithExt,PATHINFO_FILENAME);
+
+        // Get the file extension
+        $extension = $request->file('cover_image')->getClientOriginalExtension();
+
+        // Create new filename
+        $filenameToStore = $fileName . '_' . time() . '.' . $extension;
+
+        // Upload cover image
+       $path = $request->file('cover_image')->storeAs('public/album_covers',$filenameToStore);
+
+       return $path;
     }
 
     /**
