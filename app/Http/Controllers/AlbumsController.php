@@ -14,8 +14,9 @@ class AlbumsController extends Controller
      */
     public function index()
     {
-        //
-        return view('albums.index');
+        // Get a;bums photos
+        $albums = Album::with('Photos')->get();
+        return view('albums.index')->with('albums', $albums);
     }
 
     /**
@@ -43,11 +44,7 @@ class AlbumsController extends Controller
             'cover_image' => 'image|max:1999'
         ]);
 
-        // Create new album
-        $album = new Album;
-        //store in db
-        $album->name = $request->input('name');
-        $album->description = $request->input('description');
+
 
         // Get the file name with extension
         $filenameWithExt =  $request->file('cover_image')->getClientOriginalName();
@@ -64,7 +61,18 @@ class AlbumsController extends Controller
         // Upload cover image
        $path = $request->file('cover_image')->storeAs('public/album_covers',$filenameToStore);
 
-       return $path;
+        // Create new album
+        $album = new Album;
+        //store in db
+        $album->name = strip_tags(preg_replace('/\s+/', ' ',  $request->input('name')));
+        $album->description = strip_tags(preg_replace('/\s+/', ' ',  $request->input('description')));
+        $album->cover_image = strip_tags($filenameToStore);
+        $album->save();
+
+        // Redirect to albums page
+        return redirect('/')->with('success', 'Album Created');
+
+
     }
 
     /**
