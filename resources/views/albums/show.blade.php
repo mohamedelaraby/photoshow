@@ -12,35 +12,35 @@
 <hr>
 
 {{--Album content--}}
-@if(count($photo) > 0)
+@if(count($album->photos) > 0)
 
 
     <?php
 
     // $colCount ;- Get the number of albums
     //$i :- counter
-    $colCount = count($photo);
+    $colCount = count($album->photos);
     $i=1;
     ?>
 
     <div id="albums">
         <div class="row text-center">
-            @foreach($photos as $photo)
+            @foreach($album->photos as $photo)
 
                 {{--     If albums number is 1 then display them               --}}
                 @if($i == $colCount)
                     <div class="col-sm-4 col-md-4 align-content-end">
-                        <a href="/albums/{{$photo->id}}">
-                            <img src="storage/photos/{{$photo->$photo}}"
-                                 alt="{{$photo->name}}" class="img-thumbnail rounded float-left" >
+                        <a href="/photos/{{$photo->id}}">
+                            <img src="/storage/photos/{{$photo->album_id}}/{{$photo->photo}}"
+                                 alt="{{$photo->title}}" class="img-thumbnail rounded float-left" >
                         </a> <br>
                         <h4>{{$photo->title}}</h4>
 
                         @else
                             <div class="col-sm-4 col-md-4">
-                                <a href="/albums/{{$photo->id}}">
-                                    <img src="storage/photos/{{$photo->$photo}}"
-                                         alt="{{$photo->name}}" class="img-thumbnail rounded" >
+                                <a href="/photos/{{$photo->id}}">
+                                    <img src="/storage/photos/{{$photo->album_id}}/{{$photo->photo}}"
+                                         alt="{{$photo->title}}" class="img-thumbnail rounded" >
                                 </a> <br>
                                 <h4>{{$photo->title}}</h4>
                                 @endif

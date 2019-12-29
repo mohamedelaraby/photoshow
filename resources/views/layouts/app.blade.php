@@ -44,7 +44,7 @@
         </div>
         
         {{-- Footer --}}
-            <footer class="footer text-center" id="footer">
+            <footer class="footer-copyright text-center fixed-bottom" id="footer">
             <p class="lead">Copyrights 2019 &COPY; Photoshow</p>
             {{-- for dynamic time we need javascript --}}
             </footer>
