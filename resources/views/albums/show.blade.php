@@ -3,32 +3,78 @@
 @section('title','show')
 @section('content')
 
-<a href="/" class="btn btn-outline-dark mt-3">Back</a>
-
+{{-- Back Button--}}
 <div class="row">
-    <div class="col-sm-8 col-md-8">
-        <h1 class="display-4">{{$todo->text}}</h1>
-        <hr>
-        <div class="lead mt-2">{{$todo->body}}</div>
-        <small>Written on <span class="text-secondary">{{$todo->created_at}}</span>> </small>  <br>
-        <hr><br><br>
-    </div>
+    <a href="/" class="btn btn-outline-secondary mx-3" >Back</a>
+    <a href="/photos/create/{{$album->id}}" class="btn btn-info">Add Photos</a>
 </div>
 
-<div class="row">
-    <div class="col-sm-4 col-md-4">
-        <a href="{{$todo->id}}/edit" class="btn btn-outline-info">Edit  </a>
-    </div>
+<hr>
 
-    <div class="col-sm-4 col-md-4 mt-1">
-        {{-- Delete request   --}}
-        {!! Form::open(['action' => ['TodosController@destroy', $todo->id], 'method' => 'POST']) !!}
-        {{Form::token()}}
-        {{Form::hidden('_method','DELETE')}}
-        {{Form::bsSubmit('Delete', ['class' => 'btn btn-danger'])}}
-        {!! Form::close() !!}
+{{--Album content--}}
+@if(count($photo) > 0)
+
+
+    <?php
+
+    // $colCount ;- Get the number of albums
+    //$i :- counter
+    $colCount = count($photo);
+    $i=1;
+    ?>
+
+    <div id="albums">
+        <div class="row text-center">
+            @foreach($photos as $photo)
+
+                {{--     If albums number is 1 then display them               --}}
+                @if($i == $colCount)
+                    <div class="col-sm-4 col-md-4 align-content-end">
+                        <a href="/albums/{{$photo->id}}">
+                            <img src="storage/photos/{{$photo->$photo}}"
+                                 alt="{{$photo->name}}" class="img-thumbnail rounded float-left" >
+                        </a> <br>
+                        <h4>{{$photo->title}}</h4>
+
+                        @else
+                            <div class="col-sm-4 col-md-4">
+                                <a href="/albums/{{$photo->id}}">
+                                    <img src="storage/photos/{{$photo->$photo}}"
+                                         alt="{{$photo->name}}" class="img-thumbnail rounded" >
+                                </a> <br>
+                                <h4>{{$photo->title}}</h4>
+                                @endif
+
+                                {{--                  --}}
+                                @if($i % 3 == 0)
+                            </div></div> <div class="row text-center">
+                        @else
+                    </div>
+                @endif
+                <?php $i++;?>
+            @endforeach
+        </div>
     </div>
-</div>
+@else
+    <p class="lead">No phots To display</p>
+@endif
+
+
+
+{{--<div class="row">--}}
+{{--    <div class="col-sm-4 col-md-4">--}}
+{{--        <a href="{{$album->id}}/edit" class="btn btn-outline-info">Edit  </a>--}}
+{{--    </div>--}}
+
+{{--    <div class="col-sm-4 col-md-4 mt-1">--}}
+{{--        --}}{{-- Delete request   --}}
+{{--        {!! Form::open(['action' => ['AlbumsController@destroy', $album->id], 'method' => 'POST']) !!}--}}
+{{--        {{Form::token()}}--}}
+{{--        {{Form::hidden('_method','DELETE')}}--}}
+{{--        {{Form::bsSubmit('Delete', ['class' => 'btn btn-danger'])}}--}}
+{{--        {!! Form::close() !!}--}}
+{{--    </div>--}}
+{{--</div>--}}
 
 
 

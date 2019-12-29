@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Album;
+use App\Photo;
 use Illuminate\Http\Request;
 
 class PhotosController extends Controller
@@ -17,13 +19,13 @@ class PhotosController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new photo for specific album.
      *
-     * @return \Illuminate\Http\Response
+     * @return $album_id;
      */
-    public function create()
+    public function create($album_id)
     {
-        //
+        return view('photos.create')->with('album_id',$album_id);
     }
 
     /**
@@ -34,7 +36,45 @@ class PhotosController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        // Validate form
+        $this->validate($request,[
+            'title' => 'required|max:65',
+            'description' => 'required|max:120',
+            'photo' => 'image|max:1999'
+        ]);
+
+
+
+        // Get the file name with extension
+        $filenameWithExt =  $request->file('photo')->getClientOriginalName();
+
+        // Get the file name
+        $fileName = pathinfo($filenameWithExt,PATHINFO_FILENAME);
+
+        // Get the file extension
+        $extension = $request->file('photo')->getClientOriginalExtension();
+
+        // Create new filename
+        $filenameToStore = $fileName . '_' . time() . '.' . $extension;
+
+        // Upload cover image
+        $path = $request->file('photo')->storeAs('public/photos/' . $request->input('album_id') ,$filenameToStore);
+
+        // Upload photo
+        $photo = new Photo;
+        //store in db
+        $photo->album_id = $request->input('album_id');
+         $photo->title = strip_tags(preg_replace('/\s+/', ' ',  $request->input('title')));
+         $photo->description = strip_tags(preg_replace('/\s+/', ' ',  $request->input('description')));
+         $photo->size = $request->file('photo')->getSize();
+         $photo->photo = strip_tags($filenameToStore);
+
+         $photo->save();
+
+        // Redirect to albums page
+
+        return redirect('/albums/'.$request->input('album_id'))->with('success','Photo Uploaded');
     }
 
     /**
