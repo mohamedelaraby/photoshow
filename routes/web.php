@@ -22,3 +22,5 @@ Route::get('/albums/{id}', 'AlbumsController@show');
 // Route photos controller pages
 Route::resource('photo','PhotosController');
 Route::get('/photos/create/{id}','PhotosController@create');
+
+Route::get('/photos/{id}', 'PhotosController@show');
