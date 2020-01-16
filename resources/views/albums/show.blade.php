@@ -56,7 +56,7 @@
         </div>
     </div>
 @else
-    <p class="lead">No phots To display</p>
+    <p class="lead">No photo To display</p>
 @endif
 
 
